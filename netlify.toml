@@ -1,0 +1,11 @@
+# Statische Seite, kein Build nötig
+[build]
+  publish = "."
+
+# Mikrofon nur für die eigene Seite erlauben, Kamera/Ort etc. sperren
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Permissions-Policy = "microphone=(self), camera=(), geolocation=()"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"

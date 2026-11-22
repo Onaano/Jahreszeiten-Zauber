@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jahreszeiten-Zauber – Arbeitslautstärke</title>
+<meta name="description" content="Vier magische Jahreszeitenwelten für eine angenehme Arbeitslautstärke im Klassenzimmer. Die Auswertung läuft nur lokal im Browser.">
+<meta name="theme-color" content="#fdeccd">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='20' fill='%23f6c14a' stroke='%235a4234' stroke-width='4'/%3E%3Ccircle cx='25' cy='30' r='3' fill='%235a4234'/%3E%3Ccircle cx='39' cy='30' r='3' fill='%235a4234'/%3E%3Cpath d='M25 38q7 6 14 0' fill='none' stroke='%235a4234' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="start">
+  <header>
+    <h1><span>Jahreszeiten-Zauber</span></h1>
+    <p class="sub">Vier magische Welten für eine angenehme Arbeitslautstärke</p>
+    <p class="lead">Wählt eine Jahreszeit für eure Arbeitsphase.</p>
+  </header>
+  <ul class="cards" id="cards"></ul>
+  <footer>
+    <p>Das Mikrofon wird nur auf diesem Gerät ausgewertet. Es wird nichts aufgenommen, gespeichert oder gesendet.</p>
+    <button type="button" id="startDemo">Ohne Mikrofon ausprobieren (Demo)</button>
+    <p>Förderfreude Games</p>
+  </footer>
+</main>
+
+<section id="stage" hidden aria-label="Jahreszeitenwelt">
+  <div id="host"></div>
+  <div id="grain" aria-hidden="true"></div>
+
+  <div id="titlebox" class="panel ui">
+    <h2 id="title"></h2>
+    <p id="status" role="status" aria-live="polite"></p>
+    <span id="modechip"></span>
+  </div>
+
+  <div id="demobadge" hidden>DEMO<small>– ohne Mikrofon</small></div>
+
+  <div id="ribbon" class="panel ui" data-zone="mid">
+    <div class="lbl">Unsere Arbeitslautstärke</div>
+    <div class="track" aria-hidden="true"><div class="ok" id="okzone"></div><div class="dot" id="dot"></div></div>
+    <div class="ends" aria-hidden="true"><span>leise</span><span>laut</span></div>
+  </div>
+
+  <div id="dock" class="panel ui" role="toolbar" aria-label="Steuerung">
+    <button type="button" class="dbtn primary" id="bPlay"><svg viewBox="0 0 32 32" aria-hidden="true"><path id="playIcon" d="M10 6l16 10-16 10z"/></svg><span id="playLbl">Start</span></button>
+    <button type="button" class="dbtn" id="bRestart"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 15a9 9 0 1 1 3 7M7 7v8h8"/></svg><span>Neustart</span></button>
+    <button type="button" class="dbtn" id="bSeason" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26C6 12 14 6 26 6c0 12-6 20-18 20zM6 26l12-12"/></svg><span>Jahreszeit</span></button>
+    <button type="button" class="dbtn" id="bFull"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 12V5h7M20 5h7v7M27 20v7h-7M12 27H5v-7"/></svg><span id="fullLbl">Vollbild</span></button>
+    <button type="button" class="dbtn" id="bSet" aria-expanded="false" aria-controls="drawer"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="4.5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M25.2 6.8l-2.8 2.8M9.6 22.4l-2.8 2.8"/></svg><span>Einstellungen</span></button>
+  </div>
+
+  <div id="seasonmenu" class="panel" hidden role="menu" aria-label="Jahreszeit wechseln"></div>
+
+  <aside id="drawer" class="panel" aria-label="Einstellungen">
+    <button type="button" id="closeDrawer" aria-label="Einstellungen schließen">×</button>
+    <h3>Einstellungen</h3>
+
+    <fieldset id="fsMode"><legend>Arbeitsform</legend></fieldset>
+
+    <fieldset>
+      <legend><label for="sens">Empfindlichkeit</label></legend>
+      <input type="range" id="sens" min="1" max="9" step="1" value="5">
+      <div class="rng"><span>weniger empfindlich</span><span>empfindlicher</span></div>
+      <p class="note">Verschiebt die passende Obergrenze leicht nach unten oder oben.</p>
+    </fieldset>
+
+    <fieldset id="fsTempo"><legend>Tempo der Veränderung</legend></fieldset>
+
+    <fieldset>
+      <legend>Kalibrierung</legend>
+      <p class="note" id="calibState"></p>
+      <div class="row">
+        <button type="button" class="btn primary" id="bCalib">Passende Lautstärke einstellen</button>
+        <button type="button" class="btn ghost" id="bCalibReset">Zurücksetzen</button>
+      </div>
+      <p class="note">Ihr arbeitet 5 Sekunden so, wie es für die Aufgabe passt – das wird zur Orientierung der Klasse.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend><label for="mic">Mikrofon</label></legend>
+      <select id="mic"><option value="">Standard-Mikrofon</option></select>
+      <div class="row"><button type="button" class="btn" id="bMic">Mikrofon neu starten</button></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Anzeige</legend>
+      <label class="opt"><input type="checkbox" id="showBar"><span><b>Pegelband anzeigen</b><small>Ruhiges Band „Unsere Arbeitslautstärke“</small></span></label>
+    </fieldset>
+
+    <fieldset>
+      <legend>Demo-Modus</legend>
+      <label class="opt"><input type="checkbox" id="demo"><span><b>Ohne Mikrofon (Demo)</b><small>Die Lautstärke wird mit dem Regler gesteuert</small></span></label>
+      <div id="demoBox" hidden>
+        <label for="demoV" class="h">Demo-Lautstärke</label>
+        <input type="range" id="demoV" min="0" max="100" step="1" value="35">
+        <div class="rng"><span>leise</span><span>laut</span></div>
+        <label class="opt"><input type="checkbox" id="demoFast"><span><b>Zeitraffer</b><small>Veränderungen laufen etwa 6-mal schneller</small></span></label>
+      </div>
+    </fieldset>
+
+    <p class="note">Der Pegel ist ein relativer Wert des Mikrofonsignals und kein geeichter Schalldruckpegel (kein dB(A)). Er dient nur zur Orientierung. Es wird nichts aufgenommen oder gesendet.</p>
+  </aside>
+
+  <div id="veil" hidden><div id="msgcard" class="panel" role="dialog" aria-modal="true" aria-labelledby="mt"><h3 id="mt"></h3><div id="mb"></div><div class="row" id="mbtn"></div></div></div>
+  <div id="toast" class="panel" role="status" hidden></div>
+</section>
+
+<script src="engine.js"></script>
+<script src="audio.js"></script>
+<script src="worlds.js"></script>
+<script src="world-fruehling.js"></script>
+<script src="world-sommer.js"></script>
+<script src="world-herbst.js"></script>
+<script src="world-winter.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Betriebssystem-Dateien
+.DS_Store
+Thumbs.db
+
+# Editor-/IDE-Einstellungen
+.vscode/
+.idea/
+
+# Vercel
+.vercel
+
+# Node (falls später Build-Tools/Abhängigkeiten dazukommen)
+node_modules/
+npm-debug.log*
+
+# Lokale Umgebungsvariablen
+.env
+.env.local
